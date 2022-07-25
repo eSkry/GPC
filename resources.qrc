@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/package_info.sql</file>
+        <file>resources/packages.sql</file>
+    </qresource>
+</RCC>
