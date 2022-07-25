@@ -12,7 +12,6 @@
 
 #include "PackageData.h"
 #include "appsettings.h"
-#include "database.h"
 
 class TsharkWrapper;
 using TsharkWrapperPtr = std::shared_ptr<TsharkWrapper>;
@@ -77,7 +76,6 @@ private:
 
     DataStorage *pkgStorage;
     AppSettings *settings;
-    DataBase *dataBase;
 };
 
 #endif // TSHARKWRAPPER_H

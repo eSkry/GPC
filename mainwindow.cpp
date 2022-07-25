@@ -15,35 +15,25 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow) {
     ui->setupUi(this);
     mPkgCount = 0;
+    networkDeviceListModel = new NetworkDeviceListModel(this);
     pkgStorage = &DataStorage::instance();
-    errorsWindow = new ErrorsWindow(nullptr);
     appSettingsWindow = new AppSettingsWindow(nullptr);
     appSettings = &AppSettings::instance();
     mDataBase = &DataBase::instance();
     mDataBase->createNew("default.db");
 
+    networkDeviceListModel->updateList();
+    ui->interfaceCombobox->setModel(networkDeviceListModel);
 
-    connect(ui->btnErrors, &QPushButton::pressed, errorsWindow, &ErrorsWindow::show);
     connect(ui->btnStartSniff, &QPushButton::pressed, this, &MainWindow::tsharkStart);
 
-    connect(ui->btn_tsharkPathOpen, &QPushButton::pressed, [this](){
-        auto fileName = QFileDialog::getOpenFileName(this, tr("Open tshark"), "./", "Executable Windows (*.exe);;tshark (tshark.exe);;Executable Linux (*)");
-        if (!fileName.isEmpty())
-            this->ui->tsharkLineEdit->setText(fileName);
-    });
+//    connect(ui->btn_tsharkPathOpen, &QPushButton::pressed, [this](){
+//        auto fileName = QFileDialog::getOpenFileName(this, tr("Open tshark"), "./", "Executable Windows (*.exe);;tshark (tshark.exe);;Executable Linux (*)");
+//        if (!fileName.isEmpty())
+//            this->ui->tsharkLineEdit->setText(fileName);
+//    });
 
     connect(ui->btnClearData, &QPushButton::pressed, pkgStorage, &DataStorage::clearPackageList);
-
-//    sqlModel = new QSqlTableModel(this, mDataBase->getDataBase());
-//    sqlModel->setTable("packages");
-//    sqlModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-//    sqlModel->select();
-//    ui->packageTable->setModel(sqlModel);
-
-//    connect(mDataBase, &DataBase::addedNewPackage, [this](){
-//        while (sqlModel->canFetchMore())
-//            sqlModel->fetchMore();
-//    });
 
     pkgModel = new PackageDataTableModel(this);
     ui->packageTable->setModel(pkgModel);
@@ -105,10 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
 
-    connect(ui->tsharkLineEdit, &QLineEdit::textChanged, appSettings, &AppSettings::setProgrammPath);
     connect(ui->tsharkFilterLine, &QLineEdit::textChanged, appSettings, &AppSettings::setTsharkArguments);
-
-    connect(appSettings, &AppSettings::programmPathChanged, ui->tsharkLineEdit, &QLineEdit::setText);
     connect(appSettings, &AppSettings::tsharkArgsChanged, ui->tsharkFilterLine, &QLineEdit::setText);
 
     DataLoader::instance().load();
@@ -120,8 +107,6 @@ MainWindow::~MainWindow() {
         it.second->close();
         it.second->deleteLater();
     }
-    errorsWindow->close();
-    errorsWindow->deleteLater();
 
     appSettings->save();
     delete ui;
@@ -129,19 +114,19 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::tsharkStart() {
-    if (!tsharkPtr) {
-        ui->btnStartSniff->setText("Stop");
-        tsharkPtr = std::make_shared<TsharkWrapper>();
+//    if (!tsharkPtr) {
+//        ui->btnStartSniff->setText("Stop");
+//        tsharkPtr = std::make_shared<TsharkWrapper>();
 
-        connect(tsharkPtr.get(), &TsharkWrapper::subprocessFinished, this, &MainWindow::tsharkStopped);
-        connect(tsharkPtr.get(), &TsharkWrapper::errorMessage, errorsWindow, &ErrorsWindow::addString);
+//        connect(tsharkPtr.get(), &TsharkWrapper::subprocessFinished, this, &MainWindow::tsharkStopped);
+//        connect(tsharkPtr.get(), &TsharkWrapper::errorMessage, errorsWindow, &ErrorsWindow::addString);
 
-        QString cmd = ui->tsharkLineEdit->text() + " ";
-        cmd += ui->tsharkFilterLine->text();
-        QThreadPool::globalInstance()->start(new ProcessThread(tsharkPtr, cmd));
-    } else {
-        tsharkPtr->terminate();
-    }
+//        QString cmd = ui->tsharkLineEdit->text() + " ";
+//        cmd += ui->tsharkFilterLine->text();
+//        QThreadPool::globalInstance()->start(new ProcessThread(tsharkPtr, cmd));
+//    } else {
+//        tsharkPtr->terminate();
+//    }
 }
 
 void MainWindow::tsharkStopped() {

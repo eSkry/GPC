@@ -13,8 +13,8 @@
 #include "packagedatatotalmodel.h"
 
 #include "appsettings.h"
+#include "pkgcap/networkdevicelist.h"
 
-#include "errorswindow.h"
 #include "packagedetailwindow.h"
 #include "appsettingswindow.h"
 #include "database.h"
@@ -46,11 +46,12 @@ private:
     DataStorage *pkgStorage;
     PackageDataTableModel *pkgModel;
     PackageDataTotalModel *pkgTotalModel;
+    NetworkDeviceListModel *networkDeviceListModel;
     QSqlTableModel *sqlModel;
 
-    ErrorsWindow *errorsWindow;
     AppSettingsWindow *appSettingsWindow;
     std::map<QString, PackageDetailWindow*> mPackageDetailWindows;
+
 
     DataBase *mDataBase;
 };

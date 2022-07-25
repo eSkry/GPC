@@ -19,12 +19,12 @@ AppSettingsWindow::AppSettingsWindow(QWidget *parent) :
     connect(mSettings, &AppSettings::pkgLengthBytesEndianChanged, ui->pkgLenEndian, &QCheckBox::setChecked);
 
     // Updates from window
-    connect(ui->opcodeLengthSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::opcodeBytesCountChanged);
-    connect(ui->opcodeOffsetSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::opcodeBytesOffsetChanged);
+    connect(ui->opcodeLengthSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::setOpcodeBytesCount);
+    connect(ui->opcodeOffsetSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::setOpcodeBytesOffset);
 
-    connect(ui->pkgLenBytesCountSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::pkgLenghtBytesCountChanged);
-    connect(ui->pkgLenByteBeginOffset, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::pkgLenghtBytesOffsetChanged);
-    connect(ui->pkgLenEndian, &QCheckBox::clicked, mSettings, &AppSettings::pkgLengthBytesEndianChanged);
+    connect(ui->pkgLenBytesCountSpinBox, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::setPkgLengthBytesCount);
+    connect(ui->pkgLenByteBeginOffset, qOverload<int>(&QSpinBox::valueChanged), mSettings, &AppSettings::setPkgLenghtOffsetCount);
+    connect(ui->pkgLenEndian, &QCheckBox::clicked, mSettings, &AppSettings::setPkgLengthEndian);
 
     ///////////////////////////////////////////////////////
     connect(ui->saveBtn, &QPushButton::pressed, [this]() {

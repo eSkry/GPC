@@ -49,7 +49,6 @@ TsharkWrapper::TsharkWrapper() {
     mPackageData.reserve(4096);
     pkgStorage = &DataStorage::instance();
     settings = &AppSettings::instance();
-    dataBase = &DataBase::instance();
 }
 
 void TsharkWrapper::setExecutable(const QString &executable) {
@@ -144,7 +143,6 @@ void TsharkWrapper::processPackageData(QByteArray& data) {
                 pkg.timestamp = QDateTime::currentDateTime();
                 qDebug() << "PKG OP: " << mPkgOpcode;
                 pkgStorage->addPackageListItem(pkg);
-                dataBase->addPackage(mPkgOpcode, QString(mPackageData), mPackageEnd, QDateTime::currentDateTime());
 
 //                sleep(1);
             }
