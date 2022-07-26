@@ -34,6 +34,9 @@ bool PackageCapture::isStarted() const {
 }
 
 void PackageCapture::startCapture() {
+    if (!mPcapDevice)
+        mPcapDevice = pcpp::PcapLiveDeviceList::getInstance().getPcapLiveDeviceByIpOrName(mPcapDeviceName.toStdString());
+
     if (mPcapDevice) {
         if (!mPcapDevice->open()) {
             qDebug() << "Device open error. IP " << mPcapDevice->getIPv4Address().toString().c_str()
@@ -62,12 +65,12 @@ void PackageCapture::stopCapture() {
 void PackageCapture::setPcapDeviceByIpOrName(const QString &ipOrName) {
     qInfo() << "PackageCapture::setPcapDeviceByIpOrName: " << ipOrName;
 
+    mPcapDeviceName = ipOrName;
+
     if (mPcapDevice) {
         mPcapDevice->stopCapture();
         mPcapDevice = nullptr;
     }
-
-    mPcapDevice = pcpp::PcapLiveDeviceList::getInstance().getPcapLiveDeviceByIpOrName(ipOrName.toStdString());
 }
 
 void PackageCapture::setPcapFilter(const QString &filter) {

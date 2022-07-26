@@ -31,6 +31,7 @@ private:
     bool mIsStarted;
     RawDataStorage *mRawStorage;
     QString mPcapFilter;
+    QString mPcapDeviceName;
 
     pcpp::PcapLiveDevice *mPcapDevice;
 };
