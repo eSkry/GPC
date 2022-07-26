@@ -17,7 +17,7 @@ QVariant NetworkDeviceListModel::data(const QModelIndex &index, int role) const 
     if (role == Qt::DisplayRole) {
         return QString("%1 %2").arg(item->getName().c_str()).arg(item->getDesc().c_str());
     } else if (role == Qt::UserRole) {
-        return item->getName().c_str();
+        return item->getIPv4Address().toString().c_str();
     }
 
 

@@ -35,30 +35,26 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        tsharkwrapper.cpp
-        tsharkwrapper.h
+        ui/mainwindow.cpp
+        ui/mainwindow.h
         PackageData.h
         packagedatatablemodel.h
         packagedatatotalmodel.cpp
         packagedatatotalmodel.h
         packagedatatablemodel.cpp
-        mainwindow.ui
+        ui/mainwindow.ui
         ignorelisttablemodel.h
         ignorelisttablemodel.cpp
         opcodenametablemodel.h
         opcodenametablemodel.cpp
-        packagedetailwindow.h
-        packagedetailwindow.cpp
-        packagedetailwindow.ui
+        ui/packagedetailwindow.h
+        ui/packagedetailwindow.cpp
+        ui/packagedetailwindow.ui
         appsettings.h
         appsettings.cpp
-        appsettingswindow.h
-        appsettingswindow.cpp
-        appsettingswindow.ui
-        database.h
-        database.cpp
+        ui/appsettingswindow.h
+        ui/appsettingswindow.cpp
+        ui/appsettingswindow.ui
         resources.qrc
         helpers.h
         helpers.cpp
@@ -66,6 +62,14 @@ set(PROJECT_SOURCES
         selectedopcodemodel.cpp
         pkgcap/networkdevicelist.h
         pkgcap/networkdevicelist.cpp
+        pkgcap/rawdatastorage.h
+        pkgcap/rawdatastorage.cpp
+        models/capturedpackagesmodel.h
+        models/capturedpackagesmodel.cpp
+        packagecapture.h
+        packagecapture.cpp
+        packetlistrecord.h
+        packetlistrecord.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
