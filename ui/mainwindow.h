@@ -11,7 +11,7 @@
 #include "packagedatatotalmodel.h"
 #include "models/capturedpackagesmodel.h"
 
-#include "appsettings.h"
+//#include "appsettings.h"
 #include "pkgcap/networkdevicelist.h"
 
 #include "packagedetailwindow.h"
@@ -34,7 +34,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    AppSettings *appSettings;
+//    AppSettings *appSettings;
 
     NetworkDeviceListModel *networkDeviceListModel;
     CapturedPackagesModel *capturedPackagesModel;

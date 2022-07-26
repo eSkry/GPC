@@ -40,13 +40,14 @@ QString getProtocolTypeAsString(pcpp::ProtocolType protocolType) {
 CapturedPackagesModel::CapturedPackagesModel(QObject *parent) : QAbstractTableModel(parent) {
     using namespace GPC;
 
-    mTableHeaders << "No." << "Time" << "Source" << "Destination" << "Length" << "Protocol";
-    columns.push_back(RecordColumns::No);
-    columns.push_back(RecordColumns::DeltaTime);
-    columns.push_back(RecordColumns::SourceIp);
-    columns.push_back(RecordColumns::DestinationIp);
-    columns.push_back(RecordColumns::LengthPackage);
-    columns.push_back(RecordColumns::Protocol);
+    columnTypes.push_back(RecordColumns::No);
+    columnTypes.push_back(RecordColumns::DeltaTime);
+    columnTypes.push_back(RecordColumns::SourceIp);
+    columnTypes.push_back(RecordColumns::DestinationIp);
+    columnTypes.push_back(RecordColumns::PortDirection);
+    columnTypes.push_back(RecordColumns::LengthPackage);
+    columnTypes.push_back(RecordColumns::Protocol);
+    columnTypes.push_back(RecordColumns::Info);
 
     mRawDataStorage = &RawDataStorage::instance();
 
@@ -63,21 +64,17 @@ QVariant CapturedPackagesModel::data(const QModelIndex &index, int role) const {
 
     if (role == Qt::DisplayRole) {
         auto packet = mRawDataStorage->getRecord(row);
-        auto columnType = columns[index.column()];
-//        auto protocolType = parsedPacket.getLastLayer()->getProtocol();
+        auto columnType = columnTypes[index.column()];
+
         switch (index.column()) {
         case 0:
             return row;
         case 1:
             return {};
-        case 2:
-        case 3:
-        case 4:
-            return packet->getColumnData(columnType);
-        case 5: {
+        case 6:
             return getProtocolTypeAsString(static_cast<pcpp::ProtocolType>(packet->getColumnData(GPC::RecordColumns::Protocol).toULongLong()));
-        }
-//            return getProtocolTypeAsString(parsedPacket.getLastLayer()->getProtocol());
+        default:
+            return packet->getColumnData(columnType);
         }
     }
 
@@ -89,13 +86,12 @@ int CapturedPackagesModel::rowCount(const QModelIndex &parent) const {
 }
 
 int CapturedPackagesModel::columnCount(const QModelIndex &parent) const {
-    return mTableHeaders.size();
+    return columnTypes.size();
 }
 
 QVariant CapturedPackagesModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        return mTableHeaders[section];
-    }
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
+        return GPC::RecordColumn::getColumnName(static_cast<GPC::RecordColumns>(columnTypes[section]));
 
     return QVariant{};
 }

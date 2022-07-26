@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     mPackagesStorage = &RawDataStorage::instance();
     appSettingsWindow = new AppSettingsWindow(nullptr);
-    appSettings = &AppSettings::instance();
+//    appSettings = &AppSettings::instance();
 
     mPackageCapture = new PackageCapture(this);
     connect(ui->interfaceCombobox, qOverload<int>(&QComboBox::currentIndexChanged), [this](int index) {
@@ -109,16 +109,16 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
 
-    connect(ui->actionSettings, &QAction::triggered, [this](bool) {
-        appSettingsWindow->show();
-    });
+//    connect(ui->actionSettings, &QAction::triggered, [this](bool) {
+//        appSettingsWindow->show();
+//    });
 
 
-    connect(ui->tsharkFilterLine, &QLineEdit::textChanged, appSettings, &AppSettings::setTsharkArguments);
-    connect(appSettings, &AppSettings::tsharkArgsChanged, ui->tsharkFilterLine, &QLineEdit::setText);
+//    connect(ui->tsharkFilterLine, &QLineEdit::textChanged, appSettings, &AppSettings::setTsharkArguments);
+//    connect(appSettings, &AppSettings::tsharkArgsChanged, ui->tsharkFilterLine, &QLineEdit::setText);
 
     DataLoader::instance().load();
-    appSettings->load();
+//    appSettings->load();
 }
 
 MainWindow::~MainWindow() {
@@ -127,7 +127,7 @@ MainWindow::~MainWindow() {
         it.second->deleteLater();
     }
 
-    appSettings->save();
+//    appSettings->save();
     delete ui;
 }
 

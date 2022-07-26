@@ -2,6 +2,9 @@
 
 #include <IPv4Layer.h>
 #include <IPv6Layer.h>
+#include <EthLayer.h>
+#include <TcpLayer.h>
+#include <UdpLayer.h>
 
 GPC::PacketRecord::PacketRecord(pcpp::RawPacket* rawPacket) {
     _rawParsedPacket = pcpp::Packet(rawPacket);
@@ -17,9 +20,7 @@ GPC::PacketRecord::PacketRecord(pcpp::RawPacket* rawPacket) {
     QVariant layerProtocol = (unsigned long long)prevLastLayer->getProtocol();
     setColumnData(layerProtocol, RecordColumns::Protocol);
 
-    if (_rawParsedPacket.isPacketOfType(pcpp::IPv4)
-            || _rawParsedPacket.isPacketOfType(pcpp::IPv6)) {
-
+    if (_rawParsedPacket.isPacketOfType(pcpp::IP)) {
         auto layer = _rawParsedPacket.getLayerOfType<pcpp::IPv4Layer>();
 
         QVariant sourceIp = QString(layer->getSrcIPAddress().toString().c_str());
@@ -32,6 +33,19 @@ GPC::PacketRecord::PacketRecord(pcpp::RawPacket* rawPacket) {
     QVariant pkgLen = (unsigned long long)prevLastLayer->getDataLen();
     setColumnData(pkgLen, RecordColumns::LengthPackage);
 
+    if (_rawParsedPacket.isPacketOfType(pcpp::TCP)
+            || _rawParsedPacket.isPacketOfType(pcpp::UDP)) {
+        auto layer = _rawParsedPacket.getLayerOfType<pcpp::TcpLayer>();
+
+        QVariant portSrc = layer->getSrcPort();
+        setColumnData(portSrc, RecordColumns::SourcePort);
+
+        QVariant portDst = layer->getDstPort();
+        setColumnData(portDst, RecordColumns::DestinationPort);
+
+        QVariant portDir = QString::number(layer->getSrcPort()) + " -> " + QString::number(layer->getDstPort());
+        setColumnData(portDir, RecordColumns::PortDirection);
+    }
 }
 
 pcpp::RawPacket *GPC::PacketRecord::rawPacketReadOnly() {
@@ -55,9 +69,13 @@ GPC::RecordColumnDataType GPC::RecordColumn::getDataTypeByColumn(RecordColumns c
     case RecordColumns::No:
     case RecordColumns::LengthPackage:
     case RecordColumns::Protocol:
+    case RecordColumns::SourcePort:
+    case RecordColumns::DestinationPort:
         return RecordColumnDataType::Int;
     case RecordColumns::SourceIp:
     case RecordColumns::DestinationIp:
+    case RecordColumns::PortDirection:
+    case RecordColumns::Info:
         return RecordColumnDataType::String;
     case RecordColumns::DeltaTime:
         return RecordColumnDataType::Double;
@@ -71,18 +89,28 @@ GPC::RecordColumnDataType GPC::RecordColumn::getDataTypeByColumn(RecordColumns c
 
 const QString &GPC::RecordColumn::getColumnName(RecordColumns col) {
     static QString defaultStr("Unknow column name");
+
+    // Должно соответствовать enum RecordColumns
     static QStringList colNames = QStringList()
             << "No."
             << "DeltaTime"
+
             << "Source"
             << "Destination"
-            << "LengthPackage"
-            << "Protocol";
+
+            << "Length"
+            << "Protocol"
+
+            << "Src port"
+            << "Dst port"
+            << "Port dir"
+
+            << "Info";
 
     if (col >= RecordColumns::__COLUMNS_COUNT)
         return defaultStr;
 
-    return colNames[col];
+    return colNames[(int)col];
 }
 
 GPC::RecordColumn::RecordColumn(const QVariant &newData, RecordColumns colType) {
@@ -92,7 +120,6 @@ GPC::RecordColumn::RecordColumn(const QVariant &newData, RecordColumns colType) 
 
 GPC::RecordColumn::RecordColumn() {
     columnType = RecordColumns::Unknow;
-    data = 0;
 }
 
 GPC::RecordColumnDataType GPC::RecordColumn::getDataType() {

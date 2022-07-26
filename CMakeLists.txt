@@ -50,8 +50,6 @@ set(PROJECT_SOURCES
         ui/packagedetailwindow.h
         ui/packagedetailwindow.cpp
         ui/packagedetailwindow.ui
-        appsettings.h
-        appsettings.cpp
         ui/appsettingswindow.h
         ui/appsettingswindow.cpp
         ui/appsettingswindow.ui

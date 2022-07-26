@@ -14,16 +14,25 @@
 namespace GPC {
 
 enum RecordColumns : int {
-    Unknow = -1,
-
     No = 0,
     DeltaTime,
+
+    /* Addr */
     SourceIp,
     DestinationIp,
+
     LengthPackage,
     Protocol,
 
-    __COLUMNS_COUNT
+    /* PORT */
+    SourcePort,
+    DestinationPort,
+    PortDirection, // Строка вида: portFrom -> portTo
+
+    Info,
+
+    __COLUMNS_COUNT,
+    Unknow
 };
 
 enum RecordColumnDataType : int {

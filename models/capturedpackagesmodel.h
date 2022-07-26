@@ -24,8 +24,7 @@ private slots:
     void addInsertedPackage();
 
 private:
-    QStringList mTableHeaders;
-    std::vector<GPC::RecordColumns> columns;
+    std::vector<GPC::RecordColumns> columnTypes;
     RawDataStorage *mRawDataStorage;
 };
 

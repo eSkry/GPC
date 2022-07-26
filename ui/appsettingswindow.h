@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "appsettings.h"
+//#include "appsettings.h"
 
 namespace Ui {
 class AppSettingsWindow;
@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::AppSettingsWindow *ui;
-    AppSettings *mSettings;
+//    AppSettings *mSettings;
 };
 
 #endif // APPSETTINGSWINDOW_H
